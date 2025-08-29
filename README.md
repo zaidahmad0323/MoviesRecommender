@@ -82,6 +82,7 @@ This project is licensed under the MIT License.
 🙋‍♂️ About Me
 Zaid Ahmad
 Aspiring AI Engineer | Python & ML Enthusiast
-📧 zaidahmad0323@gmail.com
-🌐 LinkedIn
+Email: zaidahmad0323@gmail.com
+LinkedIn: linkedin.com/in/zaidahmad0323
+GitHub: github.com/zaidahmad0323
 
