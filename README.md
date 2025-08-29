@@ -41,6 +41,13 @@ MoviesRecommender/
 └── templates/                       # HTML templates for Flask
 │    └── index.html
 
+🙋‍♂️ **About Me**  
+**Zaid Ahmad**  
+Aspiring AI Engineer | Python & ML Enthusiast  
+📧 Email: [zaidahmad0323@gmail.com](mailto:zaidahmad0323@gmail.com)  
+🔗 [LinkedIn](https://www.linkedin.com/in/zaidahmad-ai)  
+💻 [GitHub](https://github.com/zaidahmad0323)
+
 ---
 
 ## ⚙️ Installation
