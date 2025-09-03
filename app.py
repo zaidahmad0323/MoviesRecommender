@@ -1,15 +1,14 @@
-from flask import Flask, render_template, request
 import joblib
 import requests
-
-app = Flask(__name__)
+import gradio as gr
 
 # Load your data
-movies = joblib.load('model/movies.pkl')  # your dataframe
+movies = joblib.load('model/movies.pkl')  # DataFrame of movies
 similarity = joblib.load('model/similarity.pkl')  # similarity matrix
 
-TMDB_API_KEY = "261c45208c26c74897560d639a911877"  # replace with your TMDB API key
+TMDB_API_KEY = "261c45208c26c74897560d639a911877"  # Replace with your TMDB API key
 
+# Fetch poster
 def fetch_poster(movie_id):
     if not movie_id:
         return "https://via.placeholder.com/500x750?text=No+Image"
@@ -18,43 +17,39 @@ def fetch_poster(movie_id):
         data = requests.get(url).json()
         poster_path = data.get('poster_path')
         if poster_path:
-            full_path = "https://image.tmdb.org/t/p/w500" + poster_path
-            return full_path
-        else:
-            return "https://via.placeholder.com/500x750?text=No+Image"
+            return f"https://image.tmdb.org/t/p/w500{poster_path}"
+        return "https://via.placeholder.com/500x750?text=No+Image"
     except:
         return "https://via.placeholder.com/500x750?text=No+Image"
 
+# Recommendation function
 def recommend(movie_name):
     recommended_movies = []
     recommended_posters = []
     if movie_name not in movies['title'].values:
-        return [], []
+        return []
     idx = movies[movies['title'] == movie_name].index[0]
-    sim_scores = list(enumerate(similarity[idx]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:6]  # top 5 recommendations
+    sim_scores = sorted(list(enumerate(similarity[idx])), key=lambda x: x[1], reverse=True)[1:6]
     for i in sim_scores:
         movie_index = i[0]
         recommended_movies.append(movies.iloc[movie_index]['title'])
-        recommended_posters.append(fetch_poster(movies.iloc[movie_index]['id']))  # your column is 'id'
-    return recommended_movies, recommended_posters
+        recommended_posters.append(fetch_poster(movies.iloc[movie_index]['id']))
+    return list(zip(recommended_posters, recommended_movies))
 
-@app.route("/", methods=["GET", "POST"])
-def home():
-    selected_movie = None
-    recommendations = []
-    if request.method == "POST":
-        selected_movie = request.form.get("movie")
-        recommended_movies, recommended_posters = recommend(selected_movie)
-        recommendations = list(zip(recommended_movies, recommended_posters))
+# Gradio UI
+dropdown_choices = movies['title'].values.tolist()
 
-    return render_template(
-        "index.html",
-        movies=movies['title'].values,  # for dropdown
-        recommendations=recommendations,
-        selected_movie=selected_movie
-    )
+with gr.Blocks() as demo:
+    gr.Markdown("<h1 style='text-align: center;'>🎬 Movie Recommender</h1>")
+    gr.Markdown("Pick a movie and get top 5 recommendations with posters!")
+
+    with gr.Row():
+        movie = gr.Dropdown(choices=dropdown_choices, label="🎥 Choose a Movie", interactive=True)
+        btn = gr.Button("Get Recommendations")
+
+    gallery = gr.Gallery(label="Recommended Movies", show_label=False).style(grid=5, height="auto")
+
+    btn.click(fn=recommend, inputs=movie, outputs=gallery)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    demo.launch()

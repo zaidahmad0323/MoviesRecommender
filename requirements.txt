@@ -1,4 +1,5 @@
-flask
-gunicorn
-requests
+gradio
+pandas
 joblib
+requests
+scikit-learn
