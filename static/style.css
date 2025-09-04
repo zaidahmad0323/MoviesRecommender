@@ -1,94 +1,37 @@
+/* Custom Styling for Movie Recommender */
+
+/* Body and Text */
 body {
-    font-family: Arial, sans-serif;
-    background: #222;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-}
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    background: #333;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-select, button {
-    padding: 8px;
-    border-radius: 4px;
-    border: none;
-    font-size: 16px;
-}
-button {
-    background: #ff9800;
-    color: #fff;
-    cursor: pointer;
-}
-button:hover {
-    background: #e67e22;
-}
-#recommendations {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-.recommendation {
-    background: #444;
-    padding: 10px;
-    border-radius: 4px;
-    width: 140px;
-    text-align: center;
-}
-.recommendation img {
-    width: 110px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 8px;
-}
-.logo-emoji {
-    font-size: 4.5rem;
-    margin-bottom: 7px;
-    display: inline-block;
-    filter: drop-shadow(0 4px 18px #ff980088);
-    transition: transform 0.2s;
-}
-.logo-emoji:hover {
-    transform: scale(1.15) rotate(-6deg);
-}
-body {
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', 'Roboto', Arial, sans-serif;
-    /* Animated gradient background with a radial glow overlay */
-    background: 
-        radial-gradient(ellipse at 50% 30%, rgba(255, 152, 0, 0.18) 0%, rgba(35, 37, 38, 0.8) 60%),
-        linear-gradient(-45deg, #ff9800 0%, #ff6f00 40%, #232526 100%);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    /* Animate the gradient */
-    animation: smartBG 18s ease-in-out infinite;
-    color: #f9fafb;
-    position: relative;
-    overflow-x: hidden;
-}
-@keyframes smartBG {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ...rest of your previous CSS here... */
+/* Navbar */
+.navbar {
+    border-bottom: 2px solid #f1c40f;
+}
+
+/* Movie Cards */
+.movie-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.movie-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0px 8px 16px rgba(241, 196, 15, 0.3);
+}
+
+/* Movie Poster */
+.movie-card img {
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Form Elements */
+select.form-select {
+    max-width: 400px;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid rgba(255,255,255,0.1);
+}

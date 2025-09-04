@@ -2,38 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Recommender</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Movie Recommender</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <div class="container">
-        <div class="logo-box">
-            <span class="logo-emoji" title="Movie Recommender">🎬</span>
+<body class="bg-dark text-light">
+
+    <nav class="navbar navbar-dark bg-black shadow-lg">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3 text-warning" href="#">🎬 Movie Recommender</a>
         </div>
-        <h1>Movie Recommender</h1>
-        <form method="POST" id="recommend-form">
-            <label for="movie">Select a movie:</label>
-            <select name="movie" id="movie" required>
-                <option value="" disabled selected>Select a movie</option>
-                {% for title in movies %}
-                    <option value="{{ title }}" {% if selected_movie == title %}selected{% endif %}>{{ title }}</option>
+    </nav>
+
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold">Find Your Next Favorite Movie</h1>
+            <p class="lead text-secondary">Choose a movie and get 5 top recommendations with posters!</p>
+        </div>
+
+        <form method="POST" class="d-flex justify-content-center align-items-center flex-wrap gap-3 mb-5">
+            <select name="movie" class="form-select w-50 bg-dark text-light border-warning">
+                {% for movie in movie_list %}
+                    <option value="{{ movie }}" {% if movie == selected_movie %}selected{% endif %}>{{ movie }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Recommend</button>
+            <button type="submit" class="btn btn-warning fw-bold px-4 py-2">Get Recommendations</button>
         </form>
 
         {% if recommendations %}
-            <h2>Recommended Movies</h2>
-            <div id="recommendations">
-                {% for movie, poster in recommendations %}
-                    <div class="recommendation">
-                        <img src="{{ poster }}" alt="{{ movie }} poster">
-                        <p>{{ movie }}</p>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+            {% for poster, title in recommendations %}
+            <div class="col">
+                <div class="card h-100 bg-black border-0 shadow-lg movie-card">
+                    <img src="{{ poster }}" class="card-img-top rounded" alt="{{ title }}">
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-bold text-light">{{ title }}</h6>
                     </div>
-                {% endfor %}
+                </div>
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
+
+    <footer class="bg-black text-center text-secondary py-3 mt-5">
+        <p class="mb-0">🎬 Movie Recommender | Built with Flask & TMDB API</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,12 +1,15 @@
+from flask import Flask, render_template, request
 import joblib
 import requests
-import gradio as gr
 
-# Load your data
+app = Flask(__name__)
+
+# Load data
 movies = joblib.load('model/movies.pkl')  # DataFrame of movies
 similarity = joblib.load('model/similarity.pkl')  # similarity matrix
 
 TMDB_API_KEY = "261c45208c26c74897560d639a911877"  # Replace with your TMDB API key
+
 
 # Fetch poster
 def fetch_poster(movie_id):
@@ -22,34 +25,44 @@ def fetch_poster(movie_id):
     except:
         return "https://via.placeholder.com/500x750?text=No+Image"
 
+
 # Recommendation function
 def recommend(movie_name):
     recommended_movies = []
     recommended_posters = []
     if movie_name not in movies['title'].values:
         return []
+
     idx = movies[movies['title'] == movie_name].index[0]
-    sim_scores = sorted(list(enumerate(similarity[idx])), key=lambda x: x[1], reverse=True)[1:6]
+    sim_scores = sorted(
+        list(enumerate(similarity[idx])), key=lambda x: x[1], reverse=True
+    )[1:6]
+
     for i in sim_scores:
         movie_index = i[0]
         recommended_movies.append(movies.iloc[movie_index]['title'])
         recommended_posters.append(fetch_poster(movies.iloc[movie_index]['id']))
+
     return list(zip(recommended_posters, recommended_movies))
 
-# Gradio UI
-dropdown_choices = movies['title'].values.tolist()
 
-with gr.Blocks() as demo:
-    gr.Markdown("<h1 style='text-align: center;'>🎬 Movie Recommender</h1>")
-    gr.Markdown("Pick a movie and get top 5 recommendations with posters!")
+@app.route("/", methods=["GET", "POST"])
+def home():
+    selected_movie = None
+    recommendations = []
+    movie_list = movies['title'].values.tolist()
 
-    with gr.Row():
-        movie = gr.Dropdown(choices=dropdown_choices, label="🎥 Choose a Movie", interactive=True)
-        btn = gr.Button("Get Recommendations")
+    if request.method == "POST":
+        selected_movie = request.form.get("movie")
+        recommendations = recommend(selected_movie)
 
-    gallery = gr.Gallery(label="Recommended Movies", show_label=False).style(grid=5, height="auto")
+    return render_template(
+        "index.html",
+        movie_list=movie_list,
+        selected_movie=selected_movie,
+        recommendations=recommendations,
+    )
 
-    btn.click(fn=recommend, inputs=movie, outputs=gallery)
 
 if __name__ == "__main__":
-    demo.launch()
+    app.run(debug=True)
